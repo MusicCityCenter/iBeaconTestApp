@@ -49,6 +49,11 @@
 //    [test setValue:[[NSUUID alloc] initWithUUIDString:@"8DEEFBB9-F738-4297-8040-96668BB44281"] forKey:@"proximityUUID"];
 //    self.beacons = [NSMutableArray array];
 //    [self.beacons addObject:test];
+//    test = [[CLBeacon alloc] init];
+//    [test setValue:@1 forKey:@"major"];
+//    [test setValue:@187 forKey:@"minor"];
+//    [test setValue:[[NSUUID alloc] initWithUUIDString:@"8DEEFBB9-F738-4297-8040-96668BB44281"] forKey:@"proximityUUID"];
+//    [self.beacons addObject:test];
 }
 
 # pragma mark - UITableViewDataSource
@@ -113,9 +118,8 @@
     [self.tableView reloadData];
 }
 
-# pragma mark - Button clicks
-
-- (IBAction)sendDataToServer:(UIBarButtonItem *)sender {
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    [self.locationManager stopUpdatingLocation];
     
     NSURL *url = [NSURL URLWithString:@"http://sinfoniaattendance.herokuapp.com/api/"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -141,7 +145,21 @@
         [beaconData addObject:thisBeacon];
     }
     
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:beaconData options:NSJSONWritingPrettyPrinted error:nil];
+    NSMutableDictionary *locationData = [NSMutableDictionary dictionary];
+    locationData[@"beacons"] = beaconData;
+    
+    CLLocation *curLocation = [locations lastObject];
+    
+    NSMutableDictionary *curLocData = [NSMutableDictionary dictionary];
+    curLocData[@"latitude"] = [NSNumber numberWithDouble:curLocation.coordinate.latitude];
+    curLocData[@"longitude"] = [NSNumber numberWithDouble:curLocation.coordinate.longitude];
+    curLocData[@"altitude"] = [NSNumber numberWithDouble:curLocation.altitude];
+    curLocData[@"horizontalAccuracy"] = [NSNumber numberWithDouble:curLocation.horizontalAccuracy];
+    curLocData[@"verticalAccuracy"] = [NSNumber numberWithDouble:curLocation.verticalAccuracy];
+    
+    locationData[@"gpsData"] = curLocData;
+    
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:locationData options:NSJSONWritingPrettyPrinted error:nil];
     
     NSString *afterString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
     NSLog(@"%@",afterString);
@@ -152,10 +170,17 @@
     request.HTTPBody = postData;
     
     self.conn = [NSURLConnection connectionWithRequest:request delegate:self];
-    self.receivedData = [NSMutableData dataWithCapacity: 0];
+    self.receivedData = [NSMutableData dataWithCapacity:0];
     
     [UIApplication sharedApplication].NetworkActivityIndicatorVisible = YES;
     [self.conn start];
+}
+
+# pragma mark - Button clicks
+
+- (IBAction)sendDataToServer:(UIBarButtonItem *)sender {
+    // Get the current location, then wait for the callback to send data to the server
+    [self.locationManager startUpdatingLocation];
 }
 
 # pragma mark - NSURLConnectionDelegate
