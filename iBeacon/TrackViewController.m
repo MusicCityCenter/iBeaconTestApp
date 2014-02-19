@@ -8,6 +8,7 @@
 
 #import "TrackViewController.h"
 #import "InfoViewController.h"
+#import <SystemConfiguration/CaptiveNetwork.h>
 
 @interface TrackViewController () <CLLocationManagerDelegate, UITableViewDataSource, UITableViewDelegate, NSURLConnectionDelegate>
 
@@ -146,7 +147,7 @@
     }
     
     NSMutableDictionary *locationData = [NSMutableDictionary dictionary];
-    locationData[@"beacons"] = beaconData;
+    locationData[@"beaconData"] = beaconData;
     
     CLLocation *curLocation = [locations lastObject];
     
@@ -158,6 +159,18 @@
     curLocData[@"verticalAccuracy"] = [NSNumber numberWithDouble:curLocation.verticalAccuracy];
     
     locationData[@"gpsData"] = curLocData;
+    
+    CFArrayRef interfaces = CNCopySupportedInterfaces();
+    if (interfaces) {
+        NSLog(@"Number of interfaces: %lu", CFArrayGetCount(interfaces));
+        for (CFIndex i = 0; i < CFArrayGetCount(interfaces); ++i) {
+            CFStringRef interface = CFArrayGetValueAtIndex(interfaces, i);
+            CFDictionaryRef netInfo = CNCopyCurrentNetworkInfo(interface);
+            NSLog(@"netInfo for %@: %@", interface, netInfo);
+        }
+    }
+    
+    locationData[@"wifiData"] = [NSMutableArray array];
     
     NSData *postData = [NSJSONSerialization dataWithJSONObject:locationData options:NSJSONWritingPrettyPrinted error:nil];
     
@@ -196,15 +209,13 @@
     [self.receivedData setLength:0];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     // Append the new data to receivedData.
     // receivedData is an instance variable declared elsewhere.
     [self.receivedData appendData:data];
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     // Release the connection and the data object
     // by setting the properties (declared elsewhere)
     // to nil.  Note that a real-world app usually
@@ -215,14 +226,16 @@
     self.conn = nil;
     self.receivedData = nil;
     
+    // Turn off the network indicator
+    [UIApplication sharedApplication].NetworkActivityIndicatorVisible = NO;
+    
     // inform the user
     NSLog(@"Connection failed! Error - %@ %@",
           [error localizedDescription],
           [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     // do something with the data
     // receivedData is declared as a property elsewhere
     NSLog(@"Succeeded! Received %lu bytes of data", [self.receivedData length]);
