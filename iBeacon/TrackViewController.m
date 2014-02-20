@@ -122,7 +122,7 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     [self.locationManager stopUpdatingLocation];
     
-    NSURL *url = [NSURL URLWithString:@"http://sinfoniaattendance.herokuapp.com/api/"];
+    NSURL *url = [NSURL URLWithString:@"http://10.67.50.153:5000/api/"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.HTTPMethod = @"POST";
     
@@ -160,26 +160,25 @@
     
     locationData[@"gpsData"] = curLocData;
     
-    CFArrayRef interfaces = CNCopySupportedInterfaces();
-    if (interfaces) {
-        NSLog(@"Number of interfaces: %lu", CFArrayGetCount(interfaces));
-        for (CFIndex i = 0; i < CFArrayGetCount(interfaces); ++i) {
-            CFStringRef interface = CFArrayGetValueAtIndex(interfaces, i);
-            CFDictionaryRef netInfo = CNCopyCurrentNetworkInfo(interface);
-            NSLog(@"netInfo for %@: %@", interface, netInfo);
-        }
-    }
+    locationData[@"wifiData"] = [NSMutableDictionary dictionary];
     
-    locationData[@"wifiData"] = [NSMutableArray array];
+    CFArrayRef interfaces = CNCopySupportedInterfaces();
+    
+    if (interfaces) {
+        NSDictionary *netInfo = (__bridge_transfer NSDictionary *)CNCopyCurrentNetworkInfo(CFArrayGetValueAtIndex(interfaces, 0));
+        locationData[@"wifiData"][@"ssid"] = netInfo[@"SSID"];
+        locationData[@"wifiData"][@"bssid"] = netInfo[@"BSSID"];
+    }
     
     NSData *postData = [NSJSONSerialization dataWithJSONObject:locationData options:NSJSONWritingPrettyPrinted error:nil];
     
     NSString *afterString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
-    NSLog(@"%@",afterString);
+    NSString *toSend = [NSString stringWithFormat:@"data=%@", afterString];
     
+    postData = [toSend dataUsingEncoding:NSUTF8StringEncoding];
     
     [request setValue:[NSString stringWithFormat:@"%lu", postData.length] forHTTPHeaderField:@"Content-Length"];
-    [request setValue:@"application/json charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/x-www-form-urlencoded charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     request.HTTPBody = postData;
     
     self.conn = [NSURLConnection connectionWithRequest:request delegate:self];
