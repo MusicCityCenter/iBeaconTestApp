@@ -8,6 +8,7 @@
 
 #import "TrackViewController.h"
 #import "InfoViewController.h"
+#import <CoreLocation/CoreLocation.h>
 #import <SystemConfiguration/CaptiveNetwork.h>
 
 @interface TrackViewController () <CLLocationManagerDelegate, UITableViewDataSource, UITableViewDelegate, NSURLConnectionDelegate>
@@ -20,10 +21,21 @@
 @property (strong, nonatomic) NSURLConnection *conn;
 @property (strong, nonatomic) NSMutableData *receivedData;
 
+@property NSUInteger numReq;
+
 @end
 
 
 @implementation TrackViewController
+
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.numReq = 0;
+    }
+    return self;
+}
 
 # pragma mark - Custom Getters
 
@@ -122,8 +134,9 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     [self.locationManager stopUpdatingLocation];
     
-    NSURL *url = [NSURL URLWithString:@"http://10.67.50.153:5000/api/"];
+    NSURL *url = [NSURL URLWithString:@"http://10.29.182.81/api/"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    request.timeoutInterval = 10;
     request.HTTPMethod = @"POST";
     
     NSMutableArray *beaconData = [NSMutableArray array];
@@ -173,6 +186,7 @@
     NSData *postData = [NSJSONSerialization dataWithJSONObject:locationData options:NSJSONWritingPrettyPrinted error:nil];
     
     NSString *afterString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
+    NSLog(@"%@", afterString);
     NSString *toSend = [NSString stringWithFormat:@"data=%@", afterString];
     
     postData = [toSend dataUsingEncoding:NSUTF8StringEncoding];
@@ -185,6 +199,7 @@
     self.receivedData = [NSMutableData dataWithCapacity:0];
     
     [UIApplication sharedApplication].NetworkActivityIndicatorVisible = YES;
+    ++self.numReq;
     [self.conn start];
 }
 
@@ -226,7 +241,9 @@
     self.receivedData = nil;
     
     // Turn off the network indicator
-    [UIApplication sharedApplication].NetworkActivityIndicatorVisible = NO;
+    --self.numReq;
+    if (self.numReq == 0)
+        [UIApplication sharedApplication].NetworkActivityIndicatorVisible = NO;
     
     // inform the user
     NSLog(@"Connection failed! Error - %@ %@",
@@ -242,7 +259,9 @@
     
     NSString *afterString = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
     
-    [UIApplication sharedApplication].NetworkActivityIndicatorVisible = NO;
+    --self.numReq;
+    if (self.numReq == 0)
+        [UIApplication sharedApplication].NetworkActivityIndicatorVisible = NO;
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Server says:" message:afterString delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
     [alert show];
