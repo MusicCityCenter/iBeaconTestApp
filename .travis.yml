@@ -1,4 +1,4 @@
 language: objective-c
-xcode_project: iBeacon.xcodeproj
+xcode_workspace: iBeacon.xcworkspace
 xcode_scheme: iBeacon
 xcode_sdk: iphonesimulator
