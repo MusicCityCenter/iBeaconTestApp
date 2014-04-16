@@ -134,7 +134,7 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     [self.locationManager stopUpdatingLocation];
     
-    NSURL *url = [NSURL URLWithString:@"http://10.29.182.81/api/"];
+    NSURL *url = [NSURL URLWithString:@"http://localhost:5000/api/"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.timeoutInterval = 10;
     request.HTTPMethod = @"POST";
@@ -145,7 +145,7 @@
         thisBeacon[@"uuid"] = beacon.proximityUUID.UUIDString;
         thisBeacon[@"major"] = beacon.major;
         thisBeacon[@"minor"] = beacon.minor;
-        thisBeacon[@"rssi"] = [NSNumber numberWithInt:beacon.rssi];
+        thisBeacon[@"rssi"] = [NSNumber numberWithLong:beacon.rssi];
         thisBeacon[@"accuracy"] = [NSNumber numberWithDouble:beacon.accuracy];
         if (beacon.proximity == CLProximityUnknown) {
             thisBeacon[@"distance"] = @"Unknown Proximity";
@@ -187,7 +187,7 @@
     
     NSString *afterString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
     NSLog(@"%@", afterString);
-    NSString *toSend = [NSString stringWithFormat:@"data=%@", afterString];
+    NSString *toSend = [NSString stringWithFormat:@"beaconsMapping=%@", afterString];
     
     postData = [toSend dataUsingEncoding:NSUTF8StringEncoding];
     
