@@ -10,4 +10,8 @@
 
 @interface TrackViewController : UITableViewController
 
+@property (strong, nonatomic) NSString *floorPlanId;
+
+@property (strong, nonatomic) NSString *locationId;
+
 @end

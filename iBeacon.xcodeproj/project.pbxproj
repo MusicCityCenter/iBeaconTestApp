@@ -22,6 +22,7 @@
 		4B2DFCF718971F54009E77A7 /* iBeaconTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2DFCF618971F54009E77A7 /* iBeaconTests.m */; };
 		4B2DFD0218971FFF009E77A7 /* TrackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2DFD0118971FFF009E77A7 /* TrackViewController.m */; };
 		4B911DD918FF1CCF009DF55C /* BeaconClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B911DD818FF1CCF009DF55C /* BeaconClient.m */; };
+		4B911DDC18FF2710009DF55C /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B911DDB18FF2710009DF55C /* MainViewController.m */; };
 		4BE6AA4518B2E42700475649 /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE6AA4418B2E42700475649 /* InfoViewController.m */; };
 		5F71C5776C48468390F7F33A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF4D03A6F6D841A082591751 /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -58,6 +59,8 @@
 		4B2DFD0118971FFF009E77A7 /* TrackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackViewController.m; sourceTree = "<group>"; };
 		4B911DD718FF1CCF009DF55C /* BeaconClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeaconClient.h; sourceTree = "<group>"; };
 		4B911DD818FF1CCF009DF55C /* BeaconClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeaconClient.m; sourceTree = "<group>"; };
+		4B911DDA18FF2710009DF55C /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		4B911DDB18FF2710009DF55C /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		4BE6AA4318B2E42700475649 /* InfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoViewController.h; sourceTree = "<group>"; };
 		4BE6AA4418B2E42700475649 /* InfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoViewController.m; sourceTree = "<group>"; };
 		ADF880C8B3E341879C65EB9C /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
@@ -133,6 +136,8 @@
 				4B2DFD0118971FFF009E77A7 /* TrackViewController.m */,
 				4BE6AA4318B2E42700475649 /* InfoViewController.h */,
 				4BE6AA4418B2E42700475649 /* InfoViewController.m */,
+				4B911DDA18FF2710009DF55C /* MainViewController.h */,
+				4B911DDB18FF2710009DF55C /* MainViewController.m */,
 				4B2DFCE318971F53009E77A7 /* Images.xcassets */,
 				4B2DFCD218971F53009E77A7 /* Supporting Files */,
 			);
@@ -304,6 +309,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B2DFD0218971FFF009E77A7 /* TrackViewController.m in Sources */,
+				4B911DDC18FF2710009DF55C /* MainViewController.m in Sources */,
 				4B911DD918FF1CCF009DF55C /* BeaconClient.m in Sources */,
 				4BE6AA4518B2E42700475649 /* InfoViewController.m in Sources */,
 				4B2DFCDC18971F53009E77A7 /* AppDelegate.m in Sources */,

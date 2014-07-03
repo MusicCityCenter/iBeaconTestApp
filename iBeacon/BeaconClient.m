@@ -14,7 +14,7 @@
     static BeaconClient *_sharedClient;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSURL *baseURL = [NSURL URLWithString:@"http://0-1-dot-mcc-backend.appspot.com/mcc"];
+        NSURL *baseURL = [NSURL URLWithString:@"http://0-1-dot-mcc-backend.appspot.com/mcc/"];
         
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         
@@ -34,7 +34,7 @@
 
 
 - (NSURLSessionDataTask *)postBeaconData:(NSDictionary *)beaconData floorPlanId:(NSString *)floorPlanId {
-    NSString *targetUrl = [NSString stringWithFormat:@"/beacons/%@", floorPlanId];
+    NSString *targetUrl = [NSString stringWithFormat:@"beacons/%@", floorPlanId];
     NSURLSessionDataTask *dataTask = [self POST:targetUrl
                                      parameters:beaconData
                                         success:^(NSURLSessionDataTask *task, id responseObject) {

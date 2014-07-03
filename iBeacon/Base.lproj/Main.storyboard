@@ -21,10 +21,10 @@
             </objects>
             <point key="canvasLocation" x="-343" y="-185"/>
         </scene>
-        <!--View Controller - iBeacon-->
+        <!--Main View Controller - iBeacon-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="MainViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Nna-Bk-rAo"/>
                         <viewControllerLayoutGuide type="bottom" id="Nvu-gW-e69"/>
@@ -34,23 +34,23 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="28C-k5-0BM">
-                                <rect key="frame" x="108" y="368" width="105" height="30"/>
+                                <rect key="frame" x="108" y="238" width="105" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Track iBeacons">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="6Q8-fQ-zhe" kind="push" id="3M9-hp-bqJ"/>
+                                    <segue destination="6Q8-fQ-zhe" kind="push" id="E6K-YG-2NM"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="FloorPlan ID" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M1e-nk-Zgf">
-                                <rect key="frame" x="112" y="131" width="97" height="30"/>
+                                <rect key="frame" x="112" y="100" width="97" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Location" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cGG-k7-lK0">
-                                <rect key="frame" x="112" y="199" width="97" height="30"/>
+                                <rect key="frame" x="112" y="165" width="97" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -59,6 +59,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="iBeacon" id="Si6-CC-BPj"/>
+                    <connections>
+                        <outlet property="floorPlanId" destination="M1e-nk-Zgf" id="nfd-u5-0Ru"/>
+                        <outlet property="locationId" destination="cGG-k7-lK0" id="nKb-2Q-e6P"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

@@ -122,7 +122,23 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     [self.locationManager stopUpdatingLocation];
     
+    NSMutableDictionary *beaconsAtLocation = [NSMutableDictionary dictionary];
+    
+    beaconsAtLocation[@"floorplanId"] = self.floorPlanId;
+    beaconsAtLocation[@"locationId"] = self.locationId;
+    beaconsAtLocation[@"beaconIds"] = [NSMutableArray array];
+    
+    for (CLBeacon *beacon in self.beacons) {
+        NSMutableDictionary *thisBeacon = [NSMutableDictionary dictionary];
+        thisBeacon[@"beaconId"] = [NSString stringWithFormat:@"%@-%li-%li", beacon.proximityUUID, (long) beacon.major, (long) beacon.minor];
+        thisBeacon[@"distance"] = [NSString stringWithFormat:@"%li", beacon.rssi];
+        [beaconsAtLocation[@"beaconIds"] addObject:thisBeacon];
+    }
+    
     NSMutableArray *beaconData = [NSMutableArray array];
+    [beaconData addObject:beaconsAtLocation];
+    
+    /*NSMutableArray *beaconData = [NSMutableArray array];
     for (CLBeacon *beacon in self.beacons) {
         NSMutableDictionary *thisBeacon = [NSMutableDictionary dictionary];
         thisBeacon[@"uuid"] = beacon.proximityUUID.UUIDString;
@@ -164,17 +180,18 @@
         NSDictionary *netInfo = (__bridge_transfer NSDictionary *)CNCopyCurrentNetworkInfo(CFArrayGetValueAtIndex(interfaces, 0));
         locationData[@"wifiData"][@"ssid"] = netInfo[@"SSID"];
         locationData[@"wifiData"][@"bssid"] = netInfo[@"BSSID"];
-    }
+    }*/
     
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:locationData options:NSJSONWritingPrettyPrinted error:nil];
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:beaconData options:NSJSONWritingPrettyPrinted error:nil];
     
     NSString *afterString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
     NSLog(@"%@", afterString);
     
     NSMutableDictionary *postDict = [NSMutableDictionary dictionary];
-    postDict[@"locationData"] = afterString;
+    postDict[@"beaconsMapping"] = afterString;
+    postDict[@"floorplanId"] = self.floorPlanId;
     
-    [[BeaconClient sharedClient] postBeaconData:postDict floorPlanId:@"full-test-1"];
+    [[BeaconClient sharedClient] postBeaconData:postDict floorPlanId:self.floorPlanId];
 }
 
 # pragma mark - Button clicks
